@@ -59,11 +59,11 @@ public class ExtAppLoginWindow extends AppLoginWindow {
                         .getParameterMap().containsKey(maintenanceConfig.getLoginParameterName());
             }
             if (showMaintenance) {
-                HtmlBoxLayout boxLayout = componentsFactory.createComponent(HtmlBoxLayout.class);
-                boxLayout.setTemplateContents(maintenanceConfig.getMaintenancePage());
-                boxLayout.setWidth("100%");
-                boxLayout.setHeight("100%");
-                maintenanceBox.add(boxLayout);
+                maintenanceBox.removeAll();
+                HtmlBoxLayout layout = componentsFactory.createComponent(HtmlBoxLayout.class);
+                layout.setTemplateContents(maintenanceConfig.getMaintenancePage());
+                layout.setWidth("100%");
+                maintenanceBox.add(layout);
             }
             maintenanceBox.setVisible(showMaintenance);
             loginWrapper.setVisible(!showMaintenance);

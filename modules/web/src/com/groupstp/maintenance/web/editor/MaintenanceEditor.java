@@ -1,8 +1,6 @@
 package com.groupstp.maintenance.web.editor;
 
 import com.groupstp.maintenance.config.MaintenanceConfig;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 import org.apache.commons.lang.StringUtils;
@@ -17,19 +15,11 @@ import java.util.Map;
  */
 public class MaintenanceEditor extends AbstractWindow {
 
-    public static final String SCREEN_ID = "maintenance-editor";
+    @Inject
+    protected ComponentsFactory componentsFactory;
 
-    /**
-     * Show to user maintenance page
-     *
-     * @param frame calling UI frame
-     * @return opened page instance
-     */
-    public static MaintenanceEditor show(Frame frame) {
-        Preconditions.checkNotNullArgument(frame, "Frame is empty");
-
-        return (MaintenanceEditor) frame.openWindow(SCREEN_ID, WindowManager.OpenType.DIALOG);
-    }
+    @Inject
+    protected MaintenanceConfig config;
 
     @Inject
     protected CheckBox enableChb;
@@ -44,11 +34,6 @@ public class MaintenanceEditor extends AbstractWindow {
     @Inject
     protected ScrollBoxLayout previewBox;
 
-    @Inject
-    protected ComponentsFactory componentsFactory;
-
-    @Inject
-    protected MaintenanceConfig config;
 
     @Override
     public void init(Map<String, Object> params) {
@@ -88,7 +73,6 @@ public class MaintenanceEditor extends AbstractWindow {
 
         HtmlBoxLayout layout = componentsFactory.createComponent(HtmlBoxLayout.class);
         layout.setWidth("100%");
-        layout.setHeight("100%");
         layout.setTemplateContents(value);
 
         previewBox.add(layout);
