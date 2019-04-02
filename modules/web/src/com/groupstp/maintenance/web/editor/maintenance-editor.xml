@@ -1,0 +1,54 @@
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        class="com.groupstp.maintenance.web.editor.MaintenanceEditor"
+        caption="msg://maintenanceEditor.caption"
+        messagesPack="com.groupstp.maintenance.web.editor">
+    <dialogMode width="800"
+                height="600"/>
+    <layout spacing="true" expand="mainSplit">
+        <groupBox id="genericBox" width="100%" caption="msg://maintenanceEditor.general" collapsable="true">
+            <fieldGroup id="mainFieldGroup" width="300px">
+                <column width="100px">
+                    <field id="enable" caption="msg://maintenanceEditor.enable">
+                        <checkBox id="enableChb"/>
+                    </field>
+                </column>
+                <column width="200px">
+                    <field id="loginParameterName" caption="msg://maintenanceEditor.loginParameterName">
+                        <textField id="loginParameterNameField" width="100%"/>
+                    </field>
+                </column>
+            </fieldGroup>
+        </groupBox>
+        <split id="mainSplit" width="100%" orientation="horizontal">
+            <vbox width="100%" height="100%" expand="pageEditorTabSheet" spacing="true" margin="false,true,false,false">
+                <label value="msg://maintenanceEditor.maintenancePage" stylename="h3"/>
+                <tabSheet id="pageEditorTabSheet">
+                    <tab id="html" caption="msg://maintenanceEditor.html">
+                        <sourceCodeEditor id="pageEditorHtml"
+                                          handleTabKey="true"
+                                          mode="HTML"
+                                          width="100%"
+                                          height="100%"/>
+                    </tab>
+                    <tab id="rich" caption="msg://maintenanceEditor.rich">
+                        <richTextArea id="pageEditorRich"
+                                      width="100%"
+                                      height="100%"/>
+                    </tab>
+                </tabSheet>
+            </vbox>
+            <vbox width="100%" height="100%" spacing="true" margin="false,false,false,true" expand="previewBox">
+                <label value="msg://maintenanceEditor.maintenancePagePreview" stylename="h3"/>
+                <scrollBox id="previewBox"
+                      width="100%"/>
+            </vbox>
+        </split>
+        <hbox spacing="true" stylename="c-edit-window-actions" margin="true,false,false,false" align="MIDDLE_LEFT">
+            <button invoke="onOk" icon="EDITOR_OK"
+                    caption="mainMsg://actions.Ok"
+                    stylename="primary"/>
+            <button invoke="onCancel" icon="EDITOR_CANCEL"
+                    caption="mainMsg://actions.Cancel"/>
+        </hbox>
+    </layout>
+</window>
