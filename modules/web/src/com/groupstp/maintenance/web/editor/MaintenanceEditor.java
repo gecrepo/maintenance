@@ -56,7 +56,7 @@ public class MaintenanceEditor extends AbstractWindow {
     }
 
     protected boolean isPureHtml(String page) {
-        page = page.toLowerCase().trim();
+        page = page.toLowerCase();
         return page.startsWith("<!doctype") || page.startsWith("<html");
     }
 
