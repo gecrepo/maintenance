@@ -67,7 +67,7 @@ public class ExtAppLoginWindow extends AppLoginWindow {
             }
             maintenanceBox.setVisible(showMaintenance);
             loginWrapper.setVisible(!showMaintenance);
-            poweredByLink.setVisible(!showMaintenance);
+            poweredByLink.setVisible(!showMaintenance && webConfig.getLoginDialogPoweredByLinkVisible());
         });
         return false;
     }
