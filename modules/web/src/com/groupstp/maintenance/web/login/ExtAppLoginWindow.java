@@ -8,6 +8,8 @@ import com.haulmont.cuba.gui.components.ScrollBoxLayout;
 import com.haulmont.cuba.gui.executors.BackgroundWorker;
 import com.haulmont.cuba.gui.executors.UIAccessor;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
+import com.haulmont.cuba.security.auth.Credentials;
+import com.haulmont.cuba.security.global.LoginException;
 import com.haulmont.cuba.web.app.loginwindow.AppLoginWindow;
 import com.vaadin.server.*;
 import com.vaadin.ui.UIDetachedException;
@@ -41,6 +43,8 @@ public class ExtAppLoginWindow extends AppLoginWindow {
 
     protected UIAccessor uiAccessor;
 
+    protected RequestHandler requestHandler = (RequestHandler) (s, req, res) -> checkMaintenancePage();
+
     @Override
     public void ready() {
         super.ready();
@@ -52,7 +56,7 @@ public class ExtAppLoginWindow extends AppLoginWindow {
     }
 
     protected void setupMaintenanceRequestHandler() {
-        VaadinSession.getCurrent().addRequestHandler((RequestHandler) (s, req, res) -> checkMaintenancePage());
+        VaadinSession.getCurrent().addRequestHandler(requestHandler);
     }
 
     protected boolean checkMaintenancePage() {
@@ -76,7 +80,15 @@ public class ExtAppLoginWindow extends AppLoginWindow {
             });
         } catch (UIDetachedException e) {
             log.debug("Ignore to show maintenance page since user session already expired");
+            VaadinSession.getCurrent().removeRequestHandler(requestHandler);
         }
         return false;
+    }
+
+    @Override
+    protected void doLogin(Credentials credentials) throws LoginException {
+        super.doLogin(credentials);
+
+        VaadinSession.getCurrent().removeRequestHandler(requestHandler);
     }
 }
