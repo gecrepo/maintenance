@@ -10,6 +10,9 @@ import com.haulmont.cuba.gui.executors.UIAccessor;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 import com.haulmont.cuba.web.app.loginwindow.AppLoginWindow;
 import com.vaadin.server.*;
+import com.vaadin.ui.UIDetachedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -19,6 +22,7 @@ import javax.inject.Inject;
  * @author adiatullin
  */
 public class ExtAppLoginWindow extends AppLoginWindow {
+    private static final Logger log = LoggerFactory.getLogger(ExtAppLoginWindow.class);
 
     @Inject
     protected BackgroundWorker backgroundWorker;
@@ -52,23 +56,27 @@ public class ExtAppLoginWindow extends AppLoginWindow {
     }
 
     protected boolean checkMaintenancePage() {
-        uiAccessor.accessSynchronously(() -> {
-            boolean showMaintenance = false;
-            if (Boolean.TRUE.equals(maintenanceConfig.getEnabled())) {
-                showMaintenance = !VaadinService.getCurrentRequest()
-                        .getParameterMap().containsKey(maintenanceConfig.getLoginParameterName());
-            }
-            if (showMaintenance) {
-                maintenanceBox.removeAll();
-                HtmlBoxLayout layout = componentsFactory.createComponent(HtmlBoxLayout.class);
-                layout.setTemplateContents(maintenanceConfig.getMaintenancePage());
-                layout.setWidth("100%");
-                maintenanceBox.add(layout);
-            }
-            maintenanceBox.setVisible(showMaintenance);
-            loginWrapper.setVisible(!showMaintenance);
-            poweredByLink.setVisible(!showMaintenance && webConfig.getLoginDialogPoweredByLinkVisible());
-        });
+        try {
+            uiAccessor.accessSynchronously(() -> {
+                boolean showMaintenance = false;
+                if (Boolean.TRUE.equals(maintenanceConfig.getEnabled())) {
+                    showMaintenance = !VaadinService.getCurrentRequest()
+                            .getParameterMap().containsKey(maintenanceConfig.getLoginParameterName());
+                }
+                if (showMaintenance) {
+                    maintenanceBox.removeAll();
+                    HtmlBoxLayout layout = componentsFactory.createComponent(HtmlBoxLayout.class);
+                    layout.setTemplateContents(maintenanceConfig.getMaintenancePage());
+                    layout.setWidth("100%");
+                    maintenanceBox.add(layout);
+                }
+                maintenanceBox.setVisible(showMaintenance);
+                loginWrapper.setVisible(!showMaintenance);
+                poweredByLink.setVisible(!showMaintenance && webConfig.getLoginDialogPoweredByLinkVisible());
+            });
+        } catch (UIDetachedException e) {
+            log.debug("Ignore to show maintenance page since user session already expired");
+        }
         return false;
     }
 }
